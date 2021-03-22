@@ -5,6 +5,7 @@
     <modules>
         <module>sso</module>
         <module>sso</module>
+        <module>gate_way</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
