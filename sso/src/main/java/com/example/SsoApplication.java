@@ -8,9 +8,9 @@ import org.springframework.context.annotation.ComponentScan;
 
 
 @SpringBootApplication
-@EnableDiscoveryClient
 @ComponentScan(value = "com.example")
 @MapperScan("com.example.securityService.mapper")
+@EnableDiscoveryClient
 class SsoApplication {
     public static void main(String[] args) {
         SpringApplication.run(SsoApplication.class, args);
