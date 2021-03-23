@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -39,9 +37,7 @@ public class IndexController {
      * @return
      */
     @GetMapping("menu")
-    public R getMenu(HttpSession session){
-        System.out.println("当前session值："+session);
-        System.out.println("当前SecurityContextHolder值："+SecurityContextHolder.getContext());
+    public R getMenu(){
         //获取当前登录用户用户名
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         List<JSONObject> permissionList = indexService.getMenu(username);
