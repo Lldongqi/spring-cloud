@@ -2,14 +2,14 @@ package com.example.securityService.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.common.exceptionhandler.BaseException;
 import com.example.common.utils.R;
+import com.example.securityService.entity.User;
 import com.example.securityService.service.IndexService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +40,9 @@ public class IndexController {
     public R getMenu(){
         //获取当前登录用户用户名
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if("".equals(username)){
+            throw new BaseException(500,"token已过期");
+        }
         List<JSONObject> permissionList = indexService.getMenu(username);
         return R.ok().data("permissionList", permissionList);
     }
@@ -49,6 +52,11 @@ public class IndexController {
         return R.ok();
     }
 
+
+    @PostMapping("register")
+    public R register(@RequestBody User user){
+        return R.ok();
+    }
 
     @GetMapping("session/lose")
     public R sessionLose(){

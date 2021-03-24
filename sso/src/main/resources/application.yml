@@ -2,7 +2,7 @@ server:
   port: 8090
   servlet:
     session:
-      timeout: 600
+      timeout: 60
 spring:
   redis:
     host: 127.0.0.1

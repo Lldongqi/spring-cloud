@@ -24,8 +24,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
+    private long expireTime = 2*60*60;
     private TokenManager tokenManager;
     private RedisTemplate redisTemplate;
     private AuthenticationManager authenticationManager;
@@ -63,7 +65,8 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         //根据用户名生成token
         String token = tokenManager.createToken(user.getCurrentUserInfo().getUsername());
         //把用户名称和用户权限列表放到redis
-        redisTemplate.opsForValue().set(user.getCurrentUserInfo().getUsername(),user.getPermissionValueList());
+        redisTemplate.opsForValue().set(token,token,60, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(user.getCurrentUserInfo().getUsername(),user.getPermissionValueList(),expireTime,TimeUnit.SECONDS);
         //返回token
         ResponseUtil.out(response, R.ok().data("token",token));
     }

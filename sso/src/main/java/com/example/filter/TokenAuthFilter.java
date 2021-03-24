@@ -1,7 +1,10 @@
 package com.example.filter;
 
 
+import com.example.common.exceptionhandler.BaseException;
 import com.example.security.TokenManager;
+import net.bytebuddy.implementation.bytecode.Throw;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.stereotype.Controller;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -18,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 
 public class TokenAuthFilter extends BasicAuthenticationFilter {
 
@@ -44,24 +49,25 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         //从header获取token
         String token = request.getHeader("token");
-        if (token != null) {
-            //从token获取用户名
-            String username = tokenManager.getUserInfoFromToken(token);
-            //从redis获取对应权限列表
-            List<String> permissionValueList = (List<String>) redisTemplate.opsForValue().get(username);
-            Collection<GrantedAuthority> authority = new ArrayList<>();
+        String redisToken = (String) redisTemplate.opsForValue().get(token);
+        if(!StringUtils.isBlank(redisToken)){
+            if (token != null) {
+                //从token获取用户名
+                String username = tokenManager.getUserInfoFromToken(token);
+                //从redis获取对应权限列表
+                List<String> permissionValueList = (List<String>) redisTemplate.opsForValue().get(username);
+                Collection<GrantedAuthority> authority = new ArrayList<>();
 
-            if (!authority.isEmpty()) {
-                for (String permissionValue : permissionValueList) {
-                    SimpleGrantedAuthority auth = new SimpleGrantedAuthority(permissionValue);
-                    authority.add(auth);
+                if (!authority.isEmpty()) {
+                    for (String permissionValue : permissionValueList) {
+                        SimpleGrantedAuthority auth = new SimpleGrantedAuthority(permissionValue);
+                        authority.add(auth);
+                    }
                 }
+                return new UsernamePasswordAuthenticationToken(username, token, authority);
             }
-
-
-            return new UsernamePasswordAuthenticationToken(username, token, authority);
         }
-        return null;
+        return new UsernamePasswordAuthenticationToken(null,null,null);
     }
 
 }

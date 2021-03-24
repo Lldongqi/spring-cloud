@@ -1,6 +1,7 @@
 package com.example.config;
 
 
+import com.example.common.RedisUtil;
 import com.example.filter.TokenAuthFilter;
 import com.example.filter.TokenLoginFilter;
 import com.example.security.DefaultPasswordEncoder;
@@ -27,7 +28,6 @@ public class TokenWebSecurityConfig extends WebSecurityConfigurerAdapter {
     private RedisTemplate redisTemplate;
     private DefaultPasswordEncoder defaultPasswordEncoder;
     private UserDetailsService userDetailsService;
-
     @Autowired
     public TokenWebSecurityConfig(UserDetailsService userDetailsService, DefaultPasswordEncoder defaultPasswordEncoder,
                                   TokenManager tokenManager, RedisTemplate redisTemplate) {
@@ -66,6 +66,6 @@ public class TokenWebSecurityConfig extends WebSecurityConfigurerAdapter {
     //不进行认证的路径，可以直接访问
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/api/**");
+        web.ignoring().antMatchers("/admin/acl/index/session/lose");
     }
 }

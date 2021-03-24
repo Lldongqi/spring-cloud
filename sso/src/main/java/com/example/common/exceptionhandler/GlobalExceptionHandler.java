@@ -27,13 +27,13 @@ public class GlobalExceptionHandler {
     }
 
     //自定义异常
-    @ExceptionHandler(GuliException.class)
+    @ExceptionHandler(BaseException.class)
     @ResponseBody //为了返回数据
-    public R error(GuliException e) {
-        log.error(e.getMessage());
+    public R error(BaseException e) {
+        log.error("业务异常信息:{}",e.getMessage());
         e.printStackTrace();
 
-        return R.error().code(e.getCode()).message(e.getMsg());
+        return R.error().code(e.getCode()).message(e.getMessage());
     }
 
 }
