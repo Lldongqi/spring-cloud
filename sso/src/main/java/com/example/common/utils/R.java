@@ -32,7 +32,7 @@ public class R {
     public static R error() {
         R r = new R();
         r.setSuccess(false);
-        r.setCode(20001);
+        r.setCode(500);
         r.setMessage("失败");
         return r;
     }

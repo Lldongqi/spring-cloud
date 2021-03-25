@@ -17,6 +17,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 @Configuration
@@ -55,7 +56,7 @@ public class TokenWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new TokenLoginFilter(authenticationManager(), tokenManager, redisTemplate))
                 .addFilter(new TokenAuthFilter(authenticationManager(), tokenManager, redisTemplate)).httpBasic()
                 .and().sessionManagement()
-                .invalidSessionUrl("/admin/acl/index/session/lose");// Session失效后跳转到这个链接
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);//禁用session
     }
 
     //调用userDetailsService和密码处理
@@ -66,6 +67,6 @@ public class TokenWebSecurityConfig extends WebSecurityConfigurerAdapter {
     //不进行认证的路径，可以直接访问
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/admin/acl/index/session/lose");
+        web.ignoring().antMatchers("/admin/acl/index/register");
     }
 }

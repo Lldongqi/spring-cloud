@@ -2,6 +2,8 @@ package com.example.filter;
 
 
 import com.example.common.exceptionhandler.BaseException;
+import com.example.common.utils.R;
+import com.example.common.utils.ResponseUtil;
 import com.example.security.TokenManager;
 import net.bytebuddy.implementation.bytecode.Throw;
 import org.apache.commons.lang.StringUtils;
@@ -42,8 +44,11 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
         //判断如果有权限信息，放到权限上下文中
         if (authRequest != null) {
             SecurityContextHolder.getContext().setAuthentication(authRequest);
+            chain.doFilter(request,response);
+        }else{
+            ResponseUtil.out(response, R.error().data("data","token已过期，请重新登录"));
         }
-        chain.doFilter(request,response);
+
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
@@ -67,7 +72,7 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
                 return new UsernamePasswordAuthenticationToken(username, token, authority);
             }
         }
-        return new UsernamePasswordAuthenticationToken(null,null,null);
+        return null;
     }
 
 }

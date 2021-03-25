@@ -77,5 +77,10 @@ public class IndexServiceImpl implements IndexService {
         return permissionList;
     }
 
+    @Override
+    public Boolean register(User user) {
+        return userService.save(user);
+    }
+
 
 }

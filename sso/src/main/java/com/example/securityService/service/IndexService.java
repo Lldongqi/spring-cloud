@@ -2,6 +2,7 @@ package com.example.securityService.service;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.securityService.entity.User;
 
 import java.util.List;
 import java.util.Map;
@@ -21,5 +22,7 @@ public interface IndexService {
      * @return
      */
     List<JSONObject> getMenu(String username);
+
+    Boolean register(User user);
 
 }

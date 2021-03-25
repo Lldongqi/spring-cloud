@@ -65,7 +65,7 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         //根据用户名生成token
         String token = tokenManager.createToken(user.getCurrentUserInfo().getUsername());
         //把用户名称和用户权限列表放到redis
-        redisTemplate.opsForValue().set(token,token,60, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(token,token,expireTime, TimeUnit.SECONDS);
         redisTemplate.opsForValue().set(user.getCurrentUserInfo().getUsername(),user.getPermissionValueList(),expireTime,TimeUnit.SECONDS);
         //返回token
         ResponseUtil.out(response, R.ok().data("token",token));
